@@ -24,6 +24,7 @@ public class PotentialEvaluator {
      */
     public PotentialEvaluator(Hand currentHand) {
         Card[] currentCards = currentHand.getCards();
+        double weight = 0;
         
         //Calculate the number of cards for each rank
         for(int i = 0; i < Card.NO_OF_RANKS; ++i) {
@@ -35,19 +36,14 @@ public class PotentialEvaluator {
             }
         }
         
+        
         //Calculate the potential value of current hand
-        for(int i = 0; i < Card.NO_OF_RANKS; ++i) {
-            for(int j = 0; j < Card.NO_OF_SUITS; ++j) {
-                if(rankings[i] == 0) {
-                    potentialValue += calculateOnePotentialValue(currentHand,i ,j);
-                } else {
-                    for(int k = 0; k < currentHand.size(); ++k) {
-                        if(currentCards[k].getRank() == i && currentCards[k].getSuit() != j) {
-                            potentialValue += calculateOnePotentialValue(currentHand, i, j);
-                        }
-                    }
-                }
-            }
+        if(currentHand.size() == 6) {
+            weight = (1d/(52-6));
+            potentialValue = calTotalPotValueBeforeRiver(currentHand) * weight;
+        } else if(currentHand.size() == 5) {
+            weight = 1d/((52-5) * (52-6));
+            potentialValue = calTotalPotValueBeforeTurn(currentHand) * weight;
         }
         
     }
@@ -65,16 +61,63 @@ public class PotentialEvaluator {
      *
      * @return  the potential value in one situation
      */
-    private double calculateOnePotentialValue(Hand currentHand, int newRank, int newSuit) {
-        Card newCard = new Card(newRank, newSuit);
-        Hand newHand = new Hand(currentHand.toString() + ' ' + newCard.toString());
+    private double calculateOnePotentialValue(Hand newHand) {
 //        System.out.println(newHand.toString());
         HandEvaluator evaluator = new HandEvaluator(newHand);
         int cardValue = evaluator.getValue();
-        int leftCardsNo = currentHand.size();
-        double cardPotentialValue = cardValue * (1d/(52-leftCardsNo));
+//        double cardPotentialValue = cardValue * weight;
 //        System.out.println(cardPotentialValue);
-        return cardPotentialValue;
+        return cardValue;
+    }
+    
+    private double calTotalPotValueBeforeRiver(Hand currentHand) {
+        double totalValue = 0;
+        Card[] currentCards = currentHand.getCards();
+                
+        for(int i = 0; i < Card.NO_OF_RANKS; ++i) {
+            for(int j = 0; j < Card.NO_OF_SUITS; ++j) {
+                if(rankings[i] == 0) {
+                    Card newCard = new Card(i, j);
+                    Hand newHand = new Hand(currentHand.toString() + ' ' + newCard.toString());
+                    totalValue += calculateOnePotentialValue(newHand);
+                } else {
+                    for(int k = 0; k < 6; ++k) {
+                        if(currentCards[k].getRank() == i && currentCards[k].getSuit() != j) {
+                            Card newCard = new Card(i, j);
+                            Hand newHand = new Hand(currentHand.toString() + ' ' + newCard.toString());
+                            totalValue += calculateOnePotentialValue(newHand);
+                        }
+                    }
+                }
+            }
+        }
+        
+        return totalValue;
+    }
+
+    private double calTotalPotValueBeforeTurn(Hand currentHand) {
+        double totalValue = 0;
+        Card[] currentCards = currentHand.getCards();
+                
+        for(int i = 0; i < Card.NO_OF_RANKS; ++i) {
+            for(int j = 0; j < Card.NO_OF_SUITS; ++j) {
+                if(rankings[i] == 0) {
+                    Card newCard = new Card(i, j);
+                    Hand newHand = new Hand(currentHand.toString() + ' ' + newCard.toString());
+                    totalValue += calTotalPotValueBeforeRiver(newHand);
+                } else {
+                    for(int k = 0; k < 5; ++k) {
+                        if(currentCards[k].getRank() == i && currentCards[k].getSuit() != j) {
+                            Card newCard = new Card(i, j);
+                            Hand newHand = new Hand(currentHand.toString() + ' ' + newCard.toString());
+                            totalValue += calTotalPotValueBeforeRiver(newHand);
+                        }
+                    }
+                }
+            }
+        }
+        
+        return totalValue;
     }
 
     public double getPotentialValue() {
