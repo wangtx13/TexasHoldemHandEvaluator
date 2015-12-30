@@ -10,35 +10,39 @@ package texas.holdem.hand.evaluator;
  * @author wangtianxia1
  */
 public class TexasHoldemHandEvaluator {
+    
+    private int currentValue;
+    private double potentialValue;
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        // TODO code application logic here
-
-        TexasHoldemHandEvaluate();     
+    public TexasHoldemHandEvaluator(Hand currentHand) {
+        currentValue = getCurrentValue(currentHand);
+        potentialValue = getPotentialValue(currentHand);
+    }
+    
+    public TexasHoldemHandEvaluator(String currentHandCards) {
+        currentValue = getCurrentValue(new Hand(currentHandCards));
+        potentialValue = getPotentialValue(new Hand(currentHandCards));
+    }
+     
+    private int getCurrentValue(Hand currentHand) {
+        HandEvaluator evaluator = new HandEvaluator(currentHand);
+        int value = evaluator.getValue();
+        return value;
+    }
+  
+    private double getPotentialValue(Hand currentHand) {       
+        PotentialEvaluator potEvaluator = new PotentialEvaluator(currentHand);
+        double value = potEvaluator.getPotentialValue();
        
+        return value;
     }
-    
-    public static void TexasHoldemHandEvaluate() {
-        String currentCards = "";
-        String currentHandCards = "As Qs";
-        String currentTableCards = "Ks Js 2h 3h";
-        currentCards = currentHandCards + ' ' + currentTableCards;
-        PotentialEvaluator potEvaluator = new PotentialEvaluator(new Hand(currentCards));
-        double potentialValue = potEvaluator.getPotentialValue();
-        int currentValue = CurrentValue(currentCards);
-        
-        System.out.println("Potential Value: " + potentialValue);
-        System.out.println("Current Value: " + currentValue);
-    }
-    
-    public static int CurrentValue(String s) {
-        int currentValue = 0;
-        HandEvaluator evaluator = new HandEvaluator(new Hand(s));
-        currentValue = evaluator.getValue();
+
+    public int getCurrentValue() {
         return currentValue;
+    }
+
+    public double getPotentialValue() {
+        return potentialValue;
     }
 
 }
