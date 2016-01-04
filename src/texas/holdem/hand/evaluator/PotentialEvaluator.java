@@ -5,6 +5,8 @@
  */
 package texas.holdem.hand.evaluator;
 
+import java.util.HashMap;
+
 /**
  *
  * @author wangtianxia1
@@ -49,19 +51,20 @@ public class PotentialEvaluator {
 
         //Calculate the number of cards for each rank
         //Calculate the potential value of current hand
+        HashMap<String, Boolean> existing = new HashMap();
         if (currentHand.size() == 2) {
             weight = 1d / ((52 - 2) * (52 - 5) * (52 - 6));
-            totalValue = calculatePotentialVAndT(0, 3, currentHand, rankings, types);
+            totalValue = calculatePotentialVAndT(0, 3, currentHand, rankings, existing, types);
         } else if (currentHand.size() == 5) {
             weight = 1d / ((52 - 5) * (52 - 6));
-            totalValue = calculatePotentialVAndT(0, 2, currentHand, rankings, types);
+            totalValue = calculatePotentialVAndT(0, 2, currentHand, rankings, existing, types);
         } else if (currentHand.size() == 6) {
             weight = (1d / (52 - 6));
-            totalValue = calculatePotentialVAndT(0, 1, currentHand, rankings, types);
+            totalValue = calculatePotentialVAndT(0, 1, currentHand, rankings, existing, types);
         }
         potentialValue = totalValue * weight;
         
-        System.out.println(types[9]);
+//        System.out.println(types[8]);
         
         double totalTypeNumbers = 0;
         for(int i = 0; i < 10; ++i) {
@@ -100,7 +103,8 @@ public class PotentialEvaluator {
         return handType;
     }
 
-    private double calculatePotentialVAndT(int roundedTime, int needRounds, Hand currentHand, int[][] rankings, int[] types) {
+    private double calculatePotentialVAndT(int roundedTime, int needRounds, Hand currentHand, 
+            int[][] rankings, HashMap<String, Boolean> exsiting, int[] types) {
         if (roundedTime < needRounds) {
             double value = 0;
             for (int i = 0; i < Card.NO_OF_RANKS; ++i) {
@@ -109,18 +113,20 @@ public class PotentialEvaluator {
                         Card newCard = new Card(i, j);
                         Hand newHand = new Hand(currentHand.toString() + ' ' + newCard.toString());
                         rankings[i][j] = 1;
-                        System.out.println(newHand.toString());                    
-                        value += calculatePotentialVAndT(roundedTime + 1, needRounds, newHand, rankings, types);
+//                        System.out.println(newHand.toString());                    
+                        value += calculatePotentialVAndT(roundedTime + 1, needRounds, newHand, 
+                                rankings, exsiting, types);
                         rankings[i][j] = 0;
                     }
                 }
             }
             return value;
         } else {
-            types[calculateHandType(currentHand)]++;
-            if(calculateHandType(currentHand)==9) {
-                System.out.println();
+            if (exsiting.containsKey(currentHand.toString())) {
+                return 0;
             }
+            exsiting.put(currentHand.toString(), true);
+            types[calculateHandType(currentHand)]++;
             return calculateHandValue(currentHand);
         }
     }

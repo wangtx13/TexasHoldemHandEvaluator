@@ -6,7 +6,9 @@
             <file>file:/Users/wangtianxia1/Documents/NetBeansProjects/TexasHoldemHandEvaluator/src/texas/holdem/main/Main.java</file>
             <file>file:/Users/wangtianxia1/Documents/NetBeansProjects/TexasHoldemHandEvaluator/src/texas/holdem/hand/evaluator/PotentialEvaluator.java</file>
             <file>file:/Users/wangtianxia1/Documents/NetBeansProjects/TexasHoldemHandEvaluator/src/texas/holdem/hand/evaluator/HandEvaluator.java</file>
-            <file>file:/Users/wangtianxia1/Documents/NetBeansProjects/TexasHoldemHandEvaluator/src/texas/holdem/hand/evaluator/TexasHoldemHandEvaluator.java</file>
+            <file>file:/Users/wangtianxia1/Documents/NetBeansProjects/TexasHoldemHandEvaluator/src/texas/holdem/hand/evaluator/HandValueType.java</file>
+            <file>file:/Users/wangtianxia1/Documents/NetBeansProjects/TexasHoldemHandEvaluator/src/texas/holdem/hand/evaluator/Card.java</file>
+            <file>file:/Users/wangtianxia1/Documents/NetBeansProjects/TexasHoldemHandEvaluator/src/texas/holdem/hand/evaluator/Hand.java</file>
         </group>
     </open-files>
 </project-private>

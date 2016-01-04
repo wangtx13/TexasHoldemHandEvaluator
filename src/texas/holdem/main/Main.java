@@ -19,7 +19,7 @@ public class Main {
     public static void main(String[] args) {
         // TODO code application logic here
 
-        String currentHand = "As Qs";
+        String currentHand = "Ks Qs";
         HandEvaluator handEvaluator = new HandEvaluator(new Hand(currentHand));
         PotentialEvaluator potEvaluator = new PotentialEvaluator(new Hand(currentHand));
 //        TexasHoldemHandEvaluator evaluator = new TexasHoldemHandEvaluator(currentHand);
